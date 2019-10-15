@@ -5,19 +5,21 @@
  */
 package com.bootcamp.controllers;
 
+import com.bootcamp.entities.Account;
 import com.bootcamp.entities.Employee;
 import com.bootcamp.entities.EmployeeRole;
 import com.bootcamp.entities.Login;
+import com.bootcamp.services.AccountService;
+import com.bootcamp.services.AccountStatusService;
 import com.bootcamp.services.LoginRegisterService;
-import com.bootcamp.services.MailService;
 import com.bootcamp.tools.BCrypt;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,7 +32,63 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginRegisterController {
 
     @Autowired
+    AccountService as;
+    @Autowired
+    AccountStatusService ass;
+    @Autowired
     LoginRegisterService service;
+    @Autowired
+    private JavaMailSender javaMailSender;
+
+    @PostMapping("reset")
+    public Map<String, Object> reset(@RequestBody Login login) {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            Employee employee = service.getByEmail(login.getEmail());
+            if (employee == null) {
+                result.put("status", "Email tidak ditemukan!");
+                return result;
+            }
+            SimpleMailMessage msg = new SimpleMailMessage();
+            msg.setTo(login.getEmail());
+            msg.setSubject("Hei, " + employee.getFirstName() + "! Ayo Reset Passwordmu!");
+            msg.setText("Klik tombol di bawah ini untuk mereset password");
+
+            javaMailSender.send(msg);
+            result.put("status", "Kirim email berhasil!");
+
+            //Kalau berhasil, set token
+            Account account = as.getById(employee.getId());
+            account.setToken("testing"); //Next pakai token generator
+            as.save(account);
+        } catch (Exception e) {
+            result.put("status", "Kirim email gagal!");
+        }
+        return result;
+    }
+
+    @PostMapping("savepassword")
+    public Map<String, Object> savePassword(@RequestBody Login login) {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            Employee employee = service.getByToken(login.getToken());
+            if (employee == null) {
+                result.put("status", "Token salah!");
+                return result;
+            }
+            System.out.println(employee.getFirstName());
+            
+            Account account = as.getById(employee.getId());
+            account.setPassword(login.getPassword()); //Kurang Bcrypt
+            account.setToken("-");
+            account.setStatus(ass.getById(0));
+            as.save(account);
+            result.put("status", "Ganti password berhasil!");
+        } catch (Exception e) {
+            result.put("status", "Ganti password gagal!");
+        }
+        return result;
+    }
 
     @PostMapping("login")
     public Map<String, Object> login(@RequestBody Login login) {
@@ -48,6 +106,7 @@ public class LoginRegisterController {
                 result.put("isDelete", employee.getIsDelete());
                 result.put("manager", employee.getManager().getId());
                 result.put("department", employee.getDepartment());
+                result.put("nationality", employee.getNationality());
 
                 List<String> roles = new ArrayList<>();
                 for (EmployeeRole empl : employee.getEmployeeRoleList()) {
@@ -55,16 +114,14 @@ public class LoginRegisterController {
                 }
                 result.put("roles", roles);
                 result.put("status", service.loginSuccess(employee.getId()));
-            } //            Email true & password false
+            } //Email true & password false
             else {
                 result.put("status", service.loginFailed(employee.getId()));
             }
-        } 
-        else {//Email not found
+        } else {//Email not found
             result.put("status", "Email not found");
         }
         return result;
     }
-    
-    
+
 }

@@ -16,4 +16,7 @@ import org.springframework.data.repository.CrudRepository;
 public interface EmployeeRepository extends CrudRepository<Employee, String>{
     @Query(value = "select * from tb_m_employee WHERE email=?1", nativeQuery = true)
     public Employee getByEmail(String email);
+    
+    @Query(value = "select * from tb_m_employee WHERE id=(select id from tb_m_account WHERE token=?1)", nativeQuery = true)
+    public Employee getByToken(String token);
 }

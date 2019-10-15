@@ -40,6 +40,10 @@ public class LoginRegisterService {
         return repository.getByEmail(email);
     }
 
+    public Employee getByToken(String token) {
+        return repository.getByToken(token);
+    }
+
     public String loginFailed(String accountId) {
         Account account = accountRepository.findById(accountId).get();
         String result = account.getStatus().getName();
