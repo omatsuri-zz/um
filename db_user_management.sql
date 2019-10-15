@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.7
+-- version 4.9.0.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 15, 2019 at 08:58 AM
--- Server version: 10.1.30-MariaDB
--- PHP Version: 7.2.2
+-- Generation Time: Oct 15, 2019 at 11:52 AM
+-- Server version: 10.4.6-MariaDB
+-- PHP Version: 7.3.9
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `db_user_management`
+-- Database: `db_user_management2`
 --
 
 -- --------------------------------------------------------
@@ -33,7 +33,7 @@ CREATE TABLE `tb_m_account` (
   `password` varchar(100) NOT NULL,
   `token` varchar(100) NOT NULL,
   `status` int(1) NOT NULL,
-  `verif_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `verif_time` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -41,10 +41,11 @@ CREATE TABLE `tb_m_account` (
 --
 
 INSERT INTO `tb_m_account` (`id`, `password`, `token`, `status`, `verif_time`) VALUES
-('14045', '$2a$10$BROCSakMYA3JOiTRf9AwBehzDzSIUzzMmNx14t0ufMraDfp1UpkIa', '-', 0, '2019-10-01 00:00:00'),
-('14422', '$2a$10$9C/v7rDyVpDGMBvmKNTxAOPHHZhsOgfeEaudJmanmdgcJlY7duxiq', '-', 0, '2019-10-01 00:00:00'),
-('15523', '$2a$10$BROCSakMYA3JOiTRf9AwBehzDzSIUzzMmNx14t0ufMraDfp1UpkIa', '-', 0, '2019-09-17 00:00:00'),
-('15525', '$2a$10$BROCSakMYA3JOiTRf9AwBehzDzSIUzzMmNx14t0ufMraDfp1UpkIa', '-', 0, '2019-09-17 00:00:00');
+('14000', '$2a$10$CmOSJtmAvqGc1y6fOZKVrexYWyM0GkeoPD3Dfl1pSoAUsJ2kDeA7m', '235be459-831c-405e-8036-1c56db8d7861', 0, '2019-10-15 14:53:33'),
+('14045', '$2a$10$BROCSakMYA3JOiTRf9AwBehzDzSIUzzMmNx14t0ufMraDfp1UpkIa', '14045', 0, '2019-10-01 00:00:00'),
+('14422', '$2a$10$9C/v7rDyVpDGMBvmKNTxAOPHHZhsOgfeEaudJmanmdgcJlY7duxiq', '14422', 0, '2019-10-01 00:00:00'),
+('15523', '$2a$10$BROCSakMYA3JOiTRf9AwBehzDzSIUzzMmNx14t0ufMraDfp1UpkIa', '15523', 0, '2019-09-17 00:00:00'),
+('15525', '$2a$10$BROCSakMYA3JOiTRf9AwBehzDzSIUzzMmNx14t0ufMraDfp1UpkIa', '15525', 0, '2019-09-17 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -85,7 +86,7 @@ CREATE TABLE `tb_m_employee` (
   `gender` enum('Male','Female') NOT NULL,
   `nationality` enum('WNI','WNA') NOT NULL,
   `is_delete` tinyint(1) NOT NULL,
-  `manager` varchar(11) NOT NULL,
+  `manager` varchar(11) DEFAULT NULL,
   `department` varchar(5) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -94,7 +95,8 @@ CREATE TABLE `tb_m_employee` (
 --
 
 INSERT INTO `tb_m_employee` (`id`, `first_name`, `last_name`, `email`, `birth_place`, `birth_date`, `gender`, `nationality`, `is_delete`, `manager`, `department`) VALUES
-('14045', 'Super', 'Admin', 'mii.bootcamp29@gmail.com', '2019-10-01', '2019-10-01', 'Male', 'WNI', 0, '14045', 'ADD'),
+('14000', 'Armanda', 'Dimas', 'armandadimas@live.com', '2019-10-01', '2019-10-01', 'Male', 'WNI', 0, '14045', 'ADD1'),
+('14045', 'Super', 'Admin', 'mii.bootcamp29@gmail.com', '2019-10-01', '2019-10-01', 'Male', 'WNI', 0, NULL, 'ADD'),
 ('14422', 'Dev', 'Erliando', 'dav3rliando@gmail.com', '2019-10-01', '2019-09-01', 'Male', 'WNI', 0, '14045', 'ADD1'),
 ('15523', 'Muhammad', 'Affanul Halim', 'axffan@gmail.com', '2019-10-01', '2001-01-01', 'Male', 'WNI', 0, '14045', 'ADD2'),
 ('15525', 'Wirya', 'Likwan Ibrahim', 'wehijin@gmail.com', '2019-10-01', '0001-01-01', 'Male', 'WNI', 0, '14045', 'ADD2');
@@ -152,6 +154,7 @@ INSERT INTO `tb_tr_employee_role` (`id`, `employee`, `role`) VALUES
 --
 ALTER TABLE `tb_m_account`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `token` (`token`),
   ADD KEY `status` (`status`);
 
 --
