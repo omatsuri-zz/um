@@ -11,6 +11,7 @@ import com.bootcamp.entities.Employee;
 import com.bootcamp.repositories.AccountRepository;
 import com.bootcamp.repositories.AccountStatusRepository;
 import com.bootcamp.repositories.EmployeeRepository;
+import com.bootcamp.tools.BCrypt;
 import java.io.IOException;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -68,4 +69,24 @@ public class LoginRegisterService {
         return (account.getStatus().getId() >= 0 && account.getStatus().getId() < 3)
                 ? true : false;
     }
+
+    public String changePassword(String password, String token) {
+        String result="";
+        try {
+            Employee employee = getByToken(token);
+            if (employee == null || token.equals(employee.getId()) ) {
+                return "Invalid Token!";
+            }
+            Account account = accountRepository.findById(employee.getId()).get();
+            account.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
+            account.setToken(account.getId());
+            loginSuccess(employee.getId());
+            accountRepository.save(account);
+            result = "Change password successfully";
+        } catch (Exception e) {
+            result="Change password failed";
+        }
+        return result;
+    }
+
 }
