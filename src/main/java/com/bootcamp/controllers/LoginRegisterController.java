@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  *
- * @author DevidBa
+ * @author DevidBa wowowowow
  */
 @RestController
 public class LoginRegisterController {
