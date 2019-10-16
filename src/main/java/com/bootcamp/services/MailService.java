@@ -9,7 +9,9 @@ import com.bootcamp.entities.Account;
 import com.bootcamp.entities.Employee;
 import com.bootcamp.repositories.AccountRepository;
 import com.bootcamp.repositories.EmployeeRepository;
+import com.bootcamp.tools.Fungsi;
 import java.io.IOException;
+import java.util.Date;
 import java.util.UUID;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -28,10 +30,10 @@ public class MailService {
 
     @Autowired
     EmployeeRepository employeeRepository;
-    
+
     @Autowired
     private JavaMailSender javaMailSender;
-    
+
     @Autowired
     AccountRepository accountRepository;
 
@@ -264,6 +266,7 @@ public class MailService {
             //Kalau berhasil, set token
             Account account = accountRepository.findById(employee.getId()).get();
             account.setToken(token);
+            account.setVerifTime(Fungsi.addHoursToJavaUtilDate(new Date(), 8));
             accountRepository.save(account);
             result = "Send email successfully";
         } catch (Exception e) {
