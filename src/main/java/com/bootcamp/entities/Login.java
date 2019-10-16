@@ -12,7 +12,16 @@ package com.bootcamp.entities;
 public class Login {
     private String email;
     private String password;
+    private String oldPassword;
     private String token;
+
+    public String getOldPassword() {
+        return oldPassword;
+    }
+
+    public void setOldPassword(String oldPassword) {
+        this.oldPassword = oldPassword;
+    }
 
     public String getToken() {
         return token;

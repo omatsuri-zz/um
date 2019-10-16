@@ -82,5 +82,27 @@ public class LoginRegisterService {
         }
         return result;
     }
+    
+    public String changePassword(String oldPassword, String password, String token) {
+        String result="";
+        if (!oldPassword.equals(password)) {
+            return "Password mismatch!";
+        }
+        try {
+            Employee employee = getByToken(token);
+            if (employee == null || token.equals(employee.getId()) ) {
+                return "Invalid Token!";
+            }
+            Account account = accountRepository.findById(employee.getId()).get();
+            account.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
+            account.setToken(account.getId());
+            loginSuccess(employee.getId());
+            accountRepository.save(account);
+            result = "Change password successfully";
+        } catch (Exception e) {
+            result="Change password failed";
+        }
+        return result;
+    }
 
 }
