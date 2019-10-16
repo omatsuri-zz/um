@@ -8,6 +8,7 @@ package com.bootcamp.services;
 import com.bootcamp.entities.Account;
 import com.bootcamp.entities.AccountStatus;
 import com.bootcamp.entities.Employee;
+import com.bootcamp.entities.Login;
 import com.bootcamp.repositories.AccountRepository;
 import com.bootcamp.repositories.AccountStatusRepository;
 import com.bootcamp.repositories.EmployeeRepository;
@@ -64,37 +65,18 @@ public class LoginRegisterService {
                 ? true : false;
     }
 
-    public String changePassword(String password, String token) {
+    public String changePassword(Login login) {
         String result="";
-        try {
-            Employee employee = getByToken(token);
-            if (employee == null || token.equals(employee.getId()) ) {
-                return "Invalid Token!";
-            }
-            Account account = accountRepository.findById(employee.getId()).get();
-            account.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
-            account.setToken(account.getId());
-            loginSuccess(employee.getId());
-            accountRepository.save(account);
-            result = "Change password successfully";
-        } catch (Exception e) {
-            result="Change password failed";
-        }
-        return result;
-    }
-    
-    public String changePassword(String oldPassword, String password, String token) {
-        String result="";
-        if (!oldPassword.equals(password)) {
+        if (login.getOldPassword() != null && !login.getOldPassword().equals(login.getPassword())) {
             return "Password mismatch!";
         }
         try {
-            Employee employee = getByToken(token);
-            if (employee == null || token.equals(employee.getId()) ) {
+            Employee employee = getByToken(login.getToken());
+            if (employee == null || login.getToken().equals(employee.getId()) ) {
                 return "Invalid Token!";
             }
             Account account = accountRepository.findById(employee.getId()).get();
-            account.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
+            account.setPassword(BCrypt.hashpw(login.getPassword(), BCrypt.gensalt()));
             account.setToken(account.getId());
             loginSuccess(employee.getId());
             accountRepository.save(account);

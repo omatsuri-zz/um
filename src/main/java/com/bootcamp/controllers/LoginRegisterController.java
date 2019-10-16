@@ -47,17 +47,10 @@ public class LoginRegisterController {
         return result;
     }
 
-    @PostMapping("verifyaccount")
+    @RequestMapping(method = RequestMethod.POST, value = {"verifyaccount", "changepassword"})
     public Map<String, Object> verifyAccount(@RequestBody Login login) {
         Map<String, Object> result = new HashMap<>();
-        result.put("status", service.changePassword(login.getPassword(), login.getToken()));
-        return result;
-    }
-
-    @PostMapping("resetpassword")
-    public Map<String, Object> resetPassword(@RequestBody Login login) {
-        Map<String, Object> result = new HashMap<>();
-        result.put("status", service.changePassword(login.getOldPassword(), login.getPassword(), login.getToken()));
+        result.put("status", service.changePassword(login));
         return result;
     }
 
