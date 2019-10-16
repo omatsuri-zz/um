@@ -5,6 +5,8 @@
  */
 package com.bootcamp.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -101,13 +103,22 @@ public class Employee implements Serializable {
     @Size(min = 1, max = 5)
     @Column(name = "department")
     private String department;
+    
+    @JsonManagedReference
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "employee", fetch = FetchType.LAZY)
     private Account account;
+    
+    
+    @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "manager", fetch = FetchType.LAZY)
     private List<Employee> employeeList;
+    
+    @JsonBackReference
     @JoinColumn(name = "manager", referencedColumnName = "id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Employee manager;
+    
+    @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "employee", fetch = FetchType.LAZY)
     private List<EmployeeRole> employeeRoleList;
 

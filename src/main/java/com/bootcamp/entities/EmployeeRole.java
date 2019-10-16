@@ -5,6 +5,7 @@
  */
 package com.bootcamp.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -38,9 +39,14 @@ public class EmployeeRole implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
+    
+    @JsonBackReference
     @JoinColumn(name = "employee", referencedColumnName = "id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Employee employee;
+    
+    
+    @JsonBackReference
     @JoinColumn(name = "role", referencedColumnName = "id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Role role;

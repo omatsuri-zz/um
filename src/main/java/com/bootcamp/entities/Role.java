@@ -5,6 +5,7 @@
  */
 package com.bootcamp.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
@@ -47,6 +48,8 @@ public class Role implements Serializable {
     @Size(min = 1, max = 50)
     @Column(name = "name")
     private String name;
+    
+    @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "role", fetch = FetchType.LAZY)
     private List<EmployeeRole> employeeRoleList;
 

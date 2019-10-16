@@ -5,6 +5,7 @@
  */
 package com.bootcamp.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -62,8 +63,13 @@ public class Account implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date verifTime;
     @JoinColumn(name = "id", referencedColumnName = "id", insertable = false, updatable = false)
+    
+    @JsonBackReference
     @OneToOne(optional = false, fetch = FetchType.LAZY)
     private Employee employee;
+    
+    
+    @JsonBackReference
     @JoinColumn(name = "status", referencedColumnName = "id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private AccountStatus status;
