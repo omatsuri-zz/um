@@ -7,12 +7,10 @@ package com.bootcamp.services;
 
 import com.bootcamp.entities.Account;
 import com.bootcamp.entities.Employee;
-import com.bootcamp.entities.Login;
 import com.bootcamp.repositories.AccountRepository;
 import com.bootcamp.repositories.EmployeeRepository;
 import java.io.IOException;
 import java.util.UUID;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 

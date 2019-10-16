@@ -5,11 +5,9 @@
  */
 package com.bootcamp.controllers;
 
-import com.bootcamp.entities.Account;
 import com.bootcamp.entities.Employee;
 import com.bootcamp.entities.EmployeeRole;
 import com.bootcamp.entities.Login;
-import com.bootcamp.services.AccountService;
 import com.bootcamp.services.LoginRegisterService;
 import com.bootcamp.services.MailService;
 import com.bootcamp.tools.BCrypt;
@@ -17,13 +15,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
-import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,8 +31,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class LoginRegisterController {
 
-    @Autowired
-    AccountService as;
     @Autowired
     LoginRegisterService service;
     @Autowired
